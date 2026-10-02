@@ -139,3 +139,5 @@ build/
 .firebase/
 firebase-debug.log
 build-ssr/
+.vercel
+.env*
