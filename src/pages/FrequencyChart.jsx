@@ -11,7 +11,7 @@ const QA = [
 
 const FrequencyChart = () => {
   useHead({
-    title: 'Piano Note Frequency Chart (Hz) – C2 to B7, A4 = 440 Hz | MusicKeyboard.io',
+    title: 'Piano Note Frequency Chart (Hz) – C2 to B7, A4 = 440 Hz | Quickeys',
     description: 'Frequency in hertz of every piano note from C2 to B7 in standard tuning (A4 = 440 Hz, equal temperament). Click any note to hear it.',
     path: '/frequency-chart',
     jsonLd: [breadcrumbs([['Piano', '/'], ['Note frequencies', '/frequency-chart']]), faq(QA)],

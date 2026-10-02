@@ -4,7 +4,7 @@ import { useHead } from '../seo/head';
 const CONTACT = 'alonsog.jaime@gmail.com';
 
 const SECTIONS = [
-  ['Introduction', 'We respect your privacy. This policy explains how MusicKeyboard.io handles information related to cookies and third-party technologies, such as Google AdSense, used to display advertisements.'],
+  ['Introduction', 'We respect your privacy. This policy explains how Quickeys handles information related to cookies and third-party technologies, such as Google AdSense, used to display advertisements.'],
   ['Information we collect', 'We do not collect personal data. Your piano settings (accent colour, theme, note names, zoom, volume…) are stored only in your own browser with local storage and are never sent to us. Third parties such as Google may collect information through cookies to show relevant or personalised ads.'],
   ['Cookies', 'Cookies are small text files placed on your device. This site may use necessary cookies and third-party advertising cookies. Google uses cookies to deliver relevant and personalised ads; see https://policies.google.com/technologies/ads for details. You can manage your ad preferences at https://adssettings.google.com.'],
   ['Your consent', 'Before third-party cookies are loaded, we ask for your consent through a cookie banner. If you accept, Google and other partners may use cookies to personalise ads. If you decline, only non-personalised ads are shown.'],
@@ -15,8 +15,8 @@ const SECTIONS = [
 
 const Privacy = () => {
   useHead({
-    title: 'Privacy Policy | MusicKeyboard.io',
-    description: 'How MusicKeyboard.io handles cookies, advertising and your settings.',
+    title: 'Privacy Policy | Quickeys',
+    description: 'How Quickeys handles cookies, advertising and your settings.',
     path: '/privacy',
   });
   return (

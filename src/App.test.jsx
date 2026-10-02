@@ -53,7 +53,7 @@ describe('prerendering', () => {
   it('renders a page with its head tags', () => {
     const { html, head } = renderPage('/scales/d-dorian');
     expect(head).toContain('<title data-head>D Dorian Scale on Piano');
-    expect(head).toContain('rel="canonical" href="https://musickeyboard.web.app/scales/d-dorian"');
+    expect(head).toContain('rel="canonical" href="https://quickeys.app/scales/d-dorian"');
     expect(head).toContain('"@type":"FAQPage"');
     expect(html).toContain('D Dorian');
   });

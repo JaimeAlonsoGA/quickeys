@@ -21,7 +21,7 @@ const POPULAR_SCALES = [
 const HOME_FAQ = [
   ['How do I play the piano online?', 'Click or tap the keys, or use your computer keyboard: the Q–P row and the number row play the first octaves, Z–. and A–L continue above. Hold Space for the sustain pedal and use the arrow keys to move the keyboard up or down an octave.'],
   ['How do I find a chord on the piano?', 'Type its name in the search box, like "Am7", "F#m" or "Do mayor". The notes light up on the keyboard and the chord plays. You can also pick one of the popular chords below or browse the full chord chart.'],
-  ['Can it tell me which chord I am playing?', 'Yes. Play two or more notes and MusicKeyboard.io names the interval or chord instantly, including inversions (like C/E) and seventh, ninth and suspended chords.'],
+  ['Can it tell me which chord I am playing?', 'Yes. Play two or more notes and Quickeys names the interval or chord instantly, including inversions (like C/E) and seventh, ninth and suspended chords.'],
   ['Does it work on phones and tablets?', 'Yes. It works in any modern browser with multi-touch, nothing to install. Swipe the keyboard sideways or use the octave buttons to move around.'],
   ['Is it free?', 'Completely free, with no sign-up. Your settings (colours, note names, zoom, volume) are saved in your browser.'],
   ['Which notes does the keyboard cover?', 'Six octaves of recorded acoustic piano, from C2 to B7 (72 keys), tuned to A4 = 440 Hz.'],
@@ -29,7 +29,7 @@ const HOME_FAQ = [
 
 const Home = () => {
   useHead({
-    title: 'Online Piano – Find Any Note, Chord or Scale Instantly | MusicKeyboard.io',
+    title: 'Online Piano – Find Any Note, Chord or Scale Instantly | Quickeys',
     description:
       'A quick, free online piano. Play with your mouse, touch or computer keyboard, type any chord or scale to see it on the keys, and get the chord you play named instantly. No sign-up.',
     path: '/',

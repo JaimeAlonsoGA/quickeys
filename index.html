@@ -12,7 +12,7 @@
   <script>
     // Apply the saved theme before the first paint (no flash).
     try {
-      var s = JSON.parse(localStorage.getItem('musickeyboard:settings') || '{}');
+      var s = JSON.parse(localStorage.getItem('quickeys:settings') || '{}');
       var d = s.colorScheme === 'dark' || (s.colorScheme !== 'light' && matchMedia('(prefers-color-scheme: dark)').matches);
       if (d) document.documentElement.classList.add('dark');
       if (s.accent) document.documentElement.dataset.accent = s.accent;

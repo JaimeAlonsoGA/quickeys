@@ -1,6 +1,6 @@
 {
   "short_name": "Quick Piano",
-  "name": "MusicKeyboard.io – The quick piano",
+  "name": "Quickeys – The quick piano",
   "description": "Find any note, chord or scale on a piano and hear it instantly.",
   "icons": [
     { "src": "favicon.svg", "type": "image/svg+xml", "sizes": "any" },

@@ -1,5 +1,5 @@
 {
-  "name": "musickeyboard",
+  "name": "quickeys",
   "version": "2.0.0",
   "private": true,
   "type": "module",
@@ -10,7 +10,7 @@
     "preview": "vite preview --port 4173",
     "test": "vitest run",
     "lint": "eslint .",
-    "deploy": "npm run lint && npm test && npm run build && firebase deploy --only hosting"
+    "deploy": "npm run lint && npm test && vercel deploy --prod"
   },
   "dependencies": {
     "@fontsource-variable/bricolage-grotesque": "^5.3.0",

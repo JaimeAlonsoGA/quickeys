@@ -31,7 +31,7 @@ const ScalePage = () => {
   const names = scale?.notes.map((n) => n.name) ?? [];
 
   useHead(scale ? {
-    title: `${titleCase(scale.name)} Scale on Piano – Notes ${names.join(' ')} | MusicKeyboard.io`,
+    title: `${titleCase(scale.name)} Scale on Piano – Notes ${names.join(' ')} | Quickeys`,
     description: `The ${scale.name} scale on piano: ${names.join(', ')}. Pattern ${stepPattern(scale)}. Hear it and see it on an interactive keyboard${chords.length ? ', with its chords' : ''}.`,
     path: scalePath(scale),
     type: 'article',
@@ -39,7 +39,7 @@ const ScalePage = () => {
       breadcrumbs([['Piano', '/'], ['Scales', '/scales'], [capital(scale.name), scalePath(scale)]]),
       faq(scaleFaq(scale, chords)),
     ],
-  } : { title: 'Scale not found | MusicKeyboard.io', description: 'This scale does not exist.', noindex: true });
+  } : { title: 'Scale not found | Quickeys', description: 'This scale does not exist.', noindex: true });
 
   if (!scale) return <NotFound />;
 

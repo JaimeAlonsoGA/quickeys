@@ -5,7 +5,7 @@ import { breadcrumbs, useHead } from '../seo/head';
 
 const ChordsIndex = () => {
   useHead({
-    title: `Piano Chords Chart: All ${CHORDS.length} Chords in Every Key | MusicKeyboard.io`,
+    title: `Piano Chords Chart: All ${CHORDS.length} Chords in Every Key | Quickeys`,
     description: `Interactive piano chord chart: major, minor, 7th, maj7, m7, sus, dim, aug, 9th and more in all 12 keys. See the notes on a keyboard and hear every chord.`,
     path: '/chords',
     jsonLd: [breadcrumbs([['Piano', '/'], ['Chords', '/chords']])],

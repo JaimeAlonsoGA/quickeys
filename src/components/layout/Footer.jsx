@@ -17,7 +17,7 @@ const Footer = () => (
       <div className="max-w-sm">
         <div className="flex items-center gap-2">
           <Logo className="h-6 w-6" />
-          <span className="font-display font-bold">MusicKeyboard.io</span>
+          <span className="font-display font-bold">Quickeys</span>
         </div>
         <p className="mt-2 text-sm text-muted">
           A quick, free online piano to find notes, chords and scales. No sign-up, no download.

@@ -1,5 +1,5 @@
-export const SITE_URL = 'https://musickeyboard.web.app';
-export const SITE_NAME = 'MusicKeyboard.io';
+export const SITE_URL = 'https://quickeys.app';
+export const SITE_NAME = 'Quickeys';
 export const AUTHOR = 'Jaime Alonso García-Amorena';
 
 export const ACCENTS = [

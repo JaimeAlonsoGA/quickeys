@@ -3,7 +3,7 @@ import { createContext, useCallback, useContext, useEffect, useLayoutEffect, use
 import { DEFAULT_BASE_OCTAVE, clampOctave } from '../music/keymap';
 import { ACCENTS } from '../site';
 
-export const STORAGE_KEY = 'musickeyboard:settings';
+export const STORAGE_KEY = 'quickeys:settings';
 
 export const DEFAULT_SETTINGS = {
   accent: ACCENTS[0].id,

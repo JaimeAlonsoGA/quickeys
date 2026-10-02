@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { useHead } from '../seo/head';
 
 const NotFound = () => {
-  useHead({ title: 'Page not found | MusicKeyboard.io', description: 'This page does not exist.', path: '/404', noindex: true });
+  useHead({ title: 'Page not found | Quickeys', description: 'This page does not exist.', path: '/404', noindex: true });
   return (
     <div className="card mx-auto max-w-xl p-10 text-center">
       <p className="font-mono text-sm text-accent">404</p>

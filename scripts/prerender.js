@@ -7,7 +7,7 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const out = join(root, 'build');
 const ssrDir = join(root, 'build-ssr');
-const SITE = 'https://musickeyboard.web.app';
+const SITE = 'https://quickeys.app';
 
 const { render, ROUTES, CHORDS, SCALES, notes, chordPath, scalePath } = await import(
   pathToFileURL(join(ssrDir, 'entry-server.js')).href
@@ -69,7 +69,7 @@ write('api/notes.json', JSON.stringify(noteData));
 // llms.txt (https://llmstxt.org)
 write(
   'llms.txt',
-  `# MusicKeyboard.io
+  `# Quickeys
 
 > A quick, free online piano for finding notes, chords and scales. Play it with a mouse, touch or computer keyboard; search any chord or scale to see and hear it; play notes to get the chord named. 72 keys (C2–B7), recorded piano, A4 = 440 Hz.
 
@@ -102,7 +102,7 @@ Every page below is static HTML with the full content. Note names use sharps or 
 
 write(
   'llms-full.txt',
-  `# MusicKeyboard.io – full chord and scale reference
+  `# Quickeys – full chord and scale reference
 
 ## Chords (notes from the root)
 

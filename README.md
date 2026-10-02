@@ -1,6 +1,6 @@
-# MusicKeyboard.io — the quick piano
+# Quickeys — the quick piano
 
-A fast, free online piano for finding notes, chords and scales: https://musickeyboard.web.app
+A fast, free online piano for finding notes, chords and scales: https://quickeys.app
 
 - **Play**: mouse (with glissando), multi-touch or computer keyboard (mapped by physical key position).
   <kbd>Space</kbd> sustain, <kbd>←</kbd>/<kbd>→</kbd> octave, <kbd>/</kbd> search, <kbd>Esc</kbd> clear.
@@ -21,10 +21,10 @@ DefinedTerm). The build also writes `sitemap.xml`, `llms.txt`, `llms-full.txt` a
 npm install
 npm run dev      # dev server (client-rendered)
 npm run build    # client + SSR build, then prerender every page into build/
-npm run preview  # serve build/ like Firebase Hosting (clean URLs, 404 page)
+npm run preview  # serve build/ like production (clean URLs, 404 page)
 npm test         # Vitest
 npm run lint
-npm run deploy   # lint, test, build and deploy to Firebase Hosting
+npm run deploy   # lint, test and deploy to Vercel (pushes to main also deploy)
 ```
 
 Built with React 19, React Router 7, Vite, Tailwind CSS and the Web Audio API.

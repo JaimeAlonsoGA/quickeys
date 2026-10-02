@@ -29,7 +29,7 @@ const ChordPage = () => {
   const names = chord?.notes.map((n) => n.name) ?? [];
 
   useHead(chord ? {
-    title: `${chord.symbol} Piano Chord – ${chord.name} (${names.join(' ')}) | MusicKeyboard.io`,
+    title: `${chord.symbol} Piano Chord – ${chord.name} (${names.join(' ')}) | Quickeys`,
     description: `The ${chord.name} chord (${chord.symbol}) on piano: notes ${names.join(', ')}. Hear it, see it on an interactive keyboard, and learn its formula and inversions.`,
     path: chordPath(chord),
     type: 'article',
@@ -42,10 +42,10 @@ const ChordPage = () => {
         name: `${chord.name} chord`,
         alternateName: [chord.symbol, chord.root.alt && chord.root.alt + chord.quality.symbol].filter(Boolean),
         description: `A ${chord.quality.name} chord built on ${chord.root.name}: ${names.join(', ')}.`,
-        inDefinedTermSet: 'https://musickeyboard.web.app/chords',
+        inDefinedTermSet: 'https://quickeys.app/chords',
       },
     ],
-  } : { title: 'Chord not found | MusicKeyboard.io', description: 'This chord does not exist.', noindex: true });
+  } : { title: 'Chord not found | Quickeys', description: 'This chord does not exist.', noindex: true });
 
   if (!chord) return <NotFound />;
 

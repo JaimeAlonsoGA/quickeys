@@ -5,7 +5,7 @@ import { breadcrumbs, useHead } from '../seo/head';
 
 const ScalesIndex = () => {
   useHead({
-    title: `Piano Scales: Major, Minor, Pentatonic, Blues & Modes in Every Key | MusicKeyboard.io`,
+    title: `Piano Scales: Major, Minor, Pentatonic, Blues & Modes in Every Key | Quickeys`,
     description: 'Every piano scale in all 12 keys: major, natural/harmonic/melodic minor, pentatonic, blues, Dorian, Phrygian, Lydian, Mixolydian and Locrian. Notes, patterns and chords, on an interactive keyboard.',
     path: '/scales',
     jsonLd: [breadcrumbs([['Piano', '/'], ['Scales', '/scales']])],

@@ -20,10 +20,10 @@ const SCHEMES = [
 
 const Header = () => (
   <header className="mx-auto flex w-full max-w-6xl flex-wrap items-center gap-x-6 gap-y-2 px-4 pt-4 sm:px-6 sm:pt-6">
-    <Link to="/" className="flex items-center gap-2.5" aria-label="MusicKeyboard.io home">
+    <Link to="/" className="flex items-center gap-2.5" aria-label="Quickeys home">
       <Logo className="h-8 w-8" />
       <span className="font-display text-lg font-bold tracking-tight">
-        MusicKeyboard<span className="text-muted font-semibold">.io</span>
+        Quickeys<span className="text-muted font-semibold">.app</span>
       </span>
     </Link>
     <nav className="order-last -mx-1 flex w-full gap-1 overflow-x-auto sm:order-none sm:w-auto" aria-label="Main">
