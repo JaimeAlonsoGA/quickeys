@@ -1,24 +1,36 @@
-# MusicKeyboard.io
+# MusicKeyboard.io — the quick piano
 
-A free, minimalist online piano: https://musickeyboard.web.app
+A fast, free online piano for finding notes, chords and scales: https://musickeyboard.web.app
 
-- 72 keys (C2–B7) with recorded piano samples, played through the Web Audio API
-- Mouse (with glissando), multi-touch and computer keyboard input, mapped by physical key position
-- Sustain pedal (hold <kbd>Space</kbd>), octave shift (<kbd>←</kbd>/<kbd>→</kbd>)
-- Chord and interval detection in every key and inversion, English or solfège notation
-- Color themes, zoom, volume; settings saved in the browser
-- Note frequency chart (`/freqchart`) and privacy policy (`/privacy`)
+- **Play**: mouse (with glissando), multi-touch or computer keyboard (mapped by physical key position).
+  <kbd>Space</kbd> sustain, <kbd>←</kbd>/<kbd>→</kbd> octave, <kbd>/</kbd> search, <kbd>Esc</kbd> clear.
+- **Find**: type `Am7`, `F# minor scale`, `Do mayor` or `C4` and it lights up and plays. Deep links: `/?q=Cmaj7`.
+- **Learn**: play notes and the chord or interval is named instantly, inversions included.
+- **Reference**: 300 chord pages (`/chords/a-minor-7`), 144 scale pages (`/scales/d-dorian`), note frequencies.
+- Accent colours, light/dark theme, English or solfège names; settings saved in the browser.
+
+## SEO and agents
+
+Every route is prerendered to static HTML at build time (`scripts/prerender.js`) with its own title,
+description, canonical URL, Open Graph tags and JSON-LD (WebApplication, BreadcrumbList, FAQPage,
+DefinedTerm). The build also writes `sitemap.xml`, `llms.txt`, `llms-full.txt` and JSON data in `/api/`.
 
 ## Development
 
 ```sh
 npm install
-npm run dev      # local dev server
-npm test         # unit + integration tests (Vitest)
+npm run dev      # dev server (client-rendered)
+npm run build    # client + SSR build, then prerender every page into build/
+npm run preview  # serve build/ like Firebase Hosting (clean URLs, 404 page)
+npm test         # Vitest
 npm run lint
-npm run build    # production build in build/
 npm run deploy   # lint, test, build and deploy to Firebase Hosting
 ```
 
-Built with React 19, Vite and Tailwind CSS. The privacy policy lives in
-`src/pages/Privacy.jsx`.
+Built with React 19, React Router 7, Vite, Tailwind CSS and the Web Audio API.
+
+- `src/music/` — notes, keymap and music theory (spelling, chords, scales, recognition, search)
+- `src/audio/engine.js` — sample playback
+- `src/state/` — pressed notes store and persisted settings
+- `src/components/piano/` — the keyboard, the quick piano card and search
+- `src/pages/` — routes; `src/seo/head.jsx` — per-page head tags

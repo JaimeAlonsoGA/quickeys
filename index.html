@@ -4,21 +4,22 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>MusicKeyboard.io – Free Online Piano Keyboard</title>
-  <meta name="description"
-    content="Play the piano online for free: a minimalist 72-key virtual piano with realistic sound, computer keyboard and multi-touch support, chord detection, sustain pedal, note frequency chart and color themes." />
-  <meta name="keywords"
-    content="online piano, virtual keyboard, music practice, free music instrument, play piano online, learn chords, chord finder, note tracking, frequency chart, custom keyboard settings, minimalistic music tool, interactive piano, realistic piano sound" />
-  <meta name="theme-color" content="#000000" />
-  <link rel="canonical" href="https://musickeyboard.web.app/" />
-  <meta property="og:type" content="website" />
-  <meta property="og:site_name" content="MusicKeyboard.io" />
-  <meta property="og:title" content="MusicKeyboard.io – Free Online Piano Keyboard" />
-  <meta property="og:description" content="A minimalist virtual piano with realistic sound, chord detection and color themes. Play in your browser, no download needed." />
-  <meta property="og:url" content="https://musickeyboard.web.app/" />
-  <meta property="og:image" content="https://musickeyboard.web.app/android-chrome-512x512.png" />
-  <meta name="twitter:card" content="summary" />
-  <link rel="icon" href="/favicon.ico" sizes="any" />
+  <!--app-head-->
+  <meta name="theme-color" content="#faf6ef" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#161310" media="(prefers-color-scheme: dark)" />
+  <meta name="author" content="Jaime Alonso García-Amorena" />
+  <link rel="alternate" type="text/plain" title="LLM-friendly site summary" href="/llms.txt" />
+  <script>
+    // Apply the saved theme before the first paint (no flash).
+    try {
+      var s = JSON.parse(localStorage.getItem('musickeyboard:settings') || '{}');
+      var d = s.colorScheme === 'dark' || (s.colorScheme !== 'light' && matchMedia('(prefers-color-scheme: dark)').matches);
+      if (d) document.documentElement.classList.add('dark');
+      if (s.accent) document.documentElement.dataset.accent = s.accent;
+    } catch (e) {}
+  </script>
+  <link rel="icon" href="/favicon.ico" sizes="32x32" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
   <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
   <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
@@ -106,8 +107,8 @@
 </head>
 
 <body>
-  <noscript>You need to enable JavaScript to play the piano.</noscript>
-  <div id="root"></div>
+  <noscript>The piano needs JavaScript to make sound; the reference pages work without it.</noscript>
+  <div id="root"><!--app-html--></div>
   <script type="module" src="/src/main.jsx"></script>
 </body>
 

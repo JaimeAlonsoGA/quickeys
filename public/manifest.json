@@ -1,15 +1,16 @@
 {
-  "short_name": "MusicKeyboard",
-  "name": "MusicKeyboard.io – Online Piano",
-  "description": "A minimalist virtual piano with realistic sound, chord detection and color themes.",
+  "short_name": "Quick Piano",
+  "name": "MusicKeyboard.io – The quick piano",
+  "description": "Find any note, chord or scale on a piano and hear it instantly.",
   "icons": [
-    { "src": "favicon.ico", "sizes": "64x64 32x32 24x24 16x16", "type": "image/x-icon" },
+    { "src": "favicon.svg", "type": "image/svg+xml", "sizes": "any" },
     { "src": "android-chrome-192x192.png", "type": "image/png", "sizes": "192x192" },
     { "src": "android-chrome-512x512.png", "type": "image/png", "sizes": "512x512" }
   ],
   "start_url": "/",
   "display": "standalone",
   "orientation": "any",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "theme_color": "#faf6ef",
+  "background_color": "#faf6ef",
+  "categories": ["music", "education", "utilities"]
 }

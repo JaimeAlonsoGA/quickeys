@@ -1,65 +1,78 @@
 /* eslint-disable react-refresh/only-export-components */
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import themes from '../assets/themes';
+import { createContext, useCallback, useContext, useEffect, useLayoutEffect, useMemo, useState } from 'react';
 import { DEFAULT_BASE_OCTAVE, clampOctave } from '../music/keymap';
+import { ACCENTS } from '../site';
 
-const STORAGE_KEY = 'musickeyboard:settings';
+export const STORAGE_KEY = 'musickeyboard:settings';
 
 export const DEFAULT_SETTINGS = {
-  theme: themes[0].name,
-  zoom: 10,
-  solfege: true, // Do Re Mi instead of C D E
-  showAllNames: false, // note name on every key
-  showPlayedNames: true, // played notes and chord names
+  accent: ACCENTS[0].id,
+  colorScheme: 'system', // 'system' | 'light' | 'dark'
+  solfege: false, // Do Re Mi instead of C D E
   showKeyLabels: true, // computer keys on the piano keys
-  showKeymap: false,
-  showMiniKeyboard: true,
-  hideScrollbar: false,
-  autoScroll: true,
   sustainLatch: false,
   baseOctave: DEFAULT_BASE_OCTAVE,
+  zoom: 3,
   volume: 0.8,
 };
 
-export const ZOOM_MIN = 1;
-export const ZOOM_MAX = 30;
+export const ZOOM_LEVELS = [28, 32, 36, 40, 46, 54, 64]; // white key width in px
 
 const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
 
-// Ignore anything stored that doesn't match the current settings shape.
 function sanitize(stored) {
   const settings = { ...DEFAULT_SETTINGS };
   if (!stored || typeof stored !== 'object') return settings;
   for (const key of Object.keys(DEFAULT_SETTINGS)) {
     if (typeof stored[key] === typeof DEFAULT_SETTINGS[key]) settings[key] = stored[key];
   }
-  if (!themes.some((t) => t.name === settings.theme)) settings.theme = DEFAULT_SETTINGS.theme;
-  settings.zoom = clamp(Math.round(settings.zoom), ZOOM_MIN, ZOOM_MAX);
+  if (!ACCENTS.some((a) => a.id === settings.accent)) settings.accent = DEFAULT_SETTINGS.accent;
+  if (!['system', 'light', 'dark'].includes(settings.colorScheme)) settings.colorScheme = 'system';
+  settings.zoom = clamp(Math.round(settings.zoom), 0, ZOOM_LEVELS.length - 1);
   settings.baseOctave = clampOctave(settings.baseOctave);
   settings.volume = clamp(settings.volume, 0, 1);
   return settings;
 }
 
-function loadSettings() {
-  try {
-    return sanitize(JSON.parse(localStorage.getItem(STORAGE_KEY)));
-  } catch {
-    return { ...DEFAULT_SETTINGS };
-  }
-}
+const useIsomorphicLayoutEffect = typeof window === 'undefined' ? useEffect : useLayoutEffect;
 
 const SettingsContext = createContext(null);
 
 export function SettingsProvider({ children }) {
-  const [settings, setSettings] = useState(loadSettings);
+  // Start from the defaults so the prerendered HTML hydrates cleanly, then
+  // apply the saved settings before the first paint.
+  const [settings, setSettings] = useState(DEFAULT_SETTINGS);
+
+  useIsomorphicLayoutEffect(() => {
+    try {
+      setSettings(sanitize(JSON.parse(localStorage.getItem(STORAGE_KEY))));
+    } catch {
+      // No storage: keep the defaults.
+    }
+  }, []);
 
   useEffect(() => {
+    if (settings === DEFAULT_SETTINGS) return; // not loaded yet: don't overwrite
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(settings));
     } catch {
-      // Storage unavailable (private mode, quota…): settings just won't persist.
+      // Storage unavailable: settings just won't persist.
     }
   }, [settings]);
+
+  // Theme lives on <html> (also set by an inline script before paint).
+  useEffect(() => {
+    const root = document.documentElement;
+    root.dataset.accent = settings.accent;
+    const media = window.matchMedia('(prefers-color-scheme: dark)');
+    const apply = () => {
+      const dark = settings.colorScheme === 'dark' || (settings.colorScheme === 'system' && media.matches);
+      root.classList.toggle('dark', dark);
+    };
+    apply();
+    media.addEventListener('change', apply);
+    return () => media.removeEventListener('change', apply);
+  }, [settings.accent, settings.colorScheme]);
 
   const update = useCallback((key, value) => {
     setSettings((prev) => {
@@ -68,15 +81,7 @@ export function SettingsProvider({ children }) {
     });
   }, []);
 
-  const reset = useCallback(() => setSettings({ ...DEFAULT_SETTINGS }), []);
-
-  const value = useMemo(() => ({
-    ...settings,
-    theme: themes.find((t) => t.name === settings.theme),
-    update,
-    reset,
-  }), [settings, update, reset]);
-
+  const value = useMemo(() => ({ ...settings, update }), [settings, update]);
   return <SettingsContext.Provider value={value}>{children}</SettingsContext.Provider>;
 }
 

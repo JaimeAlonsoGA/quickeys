@@ -8,11 +8,10 @@
       "**/node_modules/**"
     ],
     "cleanUrls": true,
-    "rewrites": [
-      {
-        "source": "**",
-        "destination": "/index.html"
-      }
+    "trailingSlash": false,
+    "redirects": [
+      { "source": "/freqchart", "destination": "/frequency-chart", "type": 301 },
+      { "source": "/index", "destination": "/", "type": 301 }
     ],
     "headers": [
       {
@@ -22,19 +21,26 @@
         ]
       },
       {
-        "source": "**/*.@(png|ico|webp|jpg|svg)",
+        "source": "**/*.@(png|ico|jpg|webp|svg)",
         "headers": [
           { "key": "Cache-Control", "value": "public, max-age=86400" }
         ]
       },
       {
-        "source": "/",
+        "source": "**/*.@(json|txt|xml)",
+        "headers": [
+          { "key": "Cache-Control", "value": "public, max-age=3600" },
+          { "key": "Access-Control-Allow-Origin", "value": "*" }
+        ]
+      },
+      {
+        "source": "**/!(*.*)",
         "headers": [
           { "key": "Cache-Control", "value": "no-cache" }
         ]
       },
       {
-        "source": "**/!(*.*)",
+        "source": "/",
         "headers": [
           { "key": "Cache-Control", "value": "no-cache" }
         ]

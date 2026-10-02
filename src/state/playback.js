@@ -66,6 +66,25 @@ const subscribe = (listener) => {
   return () => listeners.delete(listener);
 };
 
-export const usePressedNotes = () => useSyncExternalStore(subscribe, () => pressed);
-export const useIsPressed = (id) => useSyncExternalStore(subscribe, () => holders.has(id));
-export const useSustain = () => useSyncExternalStore(subscribe, () => sustainOn);
+const NONE = [];
+export const usePressedNotes = () => useSyncExternalStore(subscribe, () => pressed, () => NONE);
+export const useIsPressed = (id) => useSyncExternalStore(subscribe, () => holders.has(id), () => false);
+export const useSustain = () => useSyncExternalStore(subscribe, () => sustainOn, () => false);
+
+// --- Previews: play a chord (strummed) or a scale (one note after another) ---
+let previewTimers = [];
+
+export function stopPreview() {
+  previewTimers.forEach(clearTimeout);
+  previewTimers = [];
+  releaseAll((source) => source === 'preview');
+}
+
+/** Plays note ids starting `gap` ms apart, each held for `hold` ms. */
+export function playSequence(ids, { gap = 30, hold = 1200 } = {}) {
+  stopPreview();
+  ids.forEach((id, i) => {
+    previewTimers.push(setTimeout(() => pressNote(id, 'preview'), i * gap));
+    previewTimers.push(setTimeout(() => releaseNote(id, 'preview'), i * gap + hold));
+  });
+}

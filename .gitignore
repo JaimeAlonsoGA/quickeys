@@ -138,3 +138,4 @@ src/.firebaseconfig
 build/
 .firebase/
 firebase-debug.log
+build-ssr/

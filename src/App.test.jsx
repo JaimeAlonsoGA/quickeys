@@ -1,34 +1,60 @@
 import { act, fireEvent, render, screen } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
 import { describe, expect, it } from 'vitest';
 import App from './App';
+import { render as renderPage } from './entry-server';
+
+const renderAt = (path) =>
+  render(
+    <MemoryRouter initialEntries={[path]}>
+      <App />
+    </MemoryRouter>,
+  );
 
 describe('App', () => {
-  it('renders the piano and plays notes from the computer keyboard', () => {
-    render(<App />);
-    expect(screen.getByRole('heading', { level: 1, name: 'MusicKeyboard.io' })).toBeInTheDocument();
-    expect(screen.getAllByRole('button', { name: /^[A-G]#?\d$/ })).toHaveLength(72);
+  it('plays chords from the computer keyboard and names them', () => {
+    const { container } = renderAt('/');
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('The quick piano');
+    expect(container.querySelectorAll('[data-note]')).toHaveLength(72);
 
     act(() => {
-      fireEvent.keyDown(window, { code: 'KeyQ' });
-      fireEvent.keyDown(window, { code: 'KeyE' });
-      fireEvent.keyDown(window, { code: 'KeyT' });
+      ['KeyQ', 'KeyE', 'KeyT'].forEach((code) => fireEvent.keyDown(window, { code }));
     });
     expect(screen.getByRole('button', { name: 'C4' })).toHaveAttribute('aria-pressed', 'true');
-    expect(screen.getByText('DoMaj')).toBeInTheDocument(); // C major chord, in solfège by default
+    expect(screen.getByText('C major', { selector: '[aria-live] span' })).toBeInTheDocument();
 
     act(() => {
-      fireEvent.keyUp(window, { code: 'KeyQ' });
-      fireEvent.keyUp(window, { code: 'KeyE' });
-      fireEvent.keyUp(window, { code: 'KeyT' });
+      ['KeyQ', 'KeyE', 'KeyT'].forEach((code) => fireEvent.keyUp(window, { code }));
     });
     expect(screen.getByRole('button', { name: 'C4' })).toHaveAttribute('aria-pressed', 'false');
   });
 
-  it('renders the frequency chart page on its own', () => {
-    window.history.pushState({}, '', '/freqchart');
-    render(<App />);
-    expect(screen.getByRole('heading', { level: 1, name: 'Frequency Chart' })).toBeInTheDocument();
-    expect(screen.getAllByRole('row')).toHaveLength(73);
-    window.history.pushState({}, '', '/');
+  it('finds a chord from the search box', () => {
+    renderAt('/');
+    const input = screen.getByRole('combobox');
+    fireEvent.change(input, { target: { value: 'Am7' } });
+    fireEvent.keyDown(input, { key: 'Enter' });
+    expect(screen.getByText('A minor 7th chord')).toBeInTheDocument();
+  });
+
+  it('renders chord and scale pages', () => {
+    renderAt('/chords/e-flat-minor');
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Ebm chord');
+    expect(screen.getAllByText('Gb').length).toBeGreaterThan(0);
+  });
+
+  it('shows a 404 for unknown chords', () => {
+    renderAt('/chords/h-major');
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('This key doesn’t exist');
+  });
+});
+
+describe('prerendering', () => {
+  it('renders a page with its head tags', () => {
+    const { html, head } = renderPage('/scales/d-dorian');
+    expect(head).toContain('<title data-head>D Dorian Scale on Piano');
+    expect(head).toContain('rel="canonical" href="https://musickeyboard.web.app/scales/d-dorian"');
+    expect(head).toContain('"@type":"FAQPage"');
+    expect(html).toContain('D Dorian');
   });
 });
