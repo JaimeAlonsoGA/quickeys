@@ -134,3 +134,7 @@ dist
 .firebaseconfig
 src/.firebaseconfig.js
 src/.firebaseconfig
+# Build output and Firebase deploy cache
+build/
+.firebase/
+firebase-debug.log
