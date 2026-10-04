@@ -13,20 +13,14 @@ const ScalesIndex = () => {
 
   return (
     <>
-      <div className="mb-6 max-w-3xl">
-        <h1 className="text-3xl font-bold sm:text-4xl">Piano scales</h1>
-        <p className="mt-2 text-muted sm:text-lg">
-          {SCALES.length} scales: {SCALE_TYPES.length} scale types in all 12 keys, each with its notes, step pattern and the chords
-          that belong to it.
-        </p>
-      </div>
+      <h1 className="mb-6 text-3xl font-bold sm:text-4xl">Piano scales</h1>
       <div className="grid gap-5 md:grid-cols-2">
         {SCALE_TYPES.map((type) => {
           const scales = SCALES.filter((s) => s.scaleType === type);
           return (
             <Section key={type.id} title={`${type.name[0].toUpperCase()}${type.name.slice(1)} scales`} className="!p-5">
               <p className="-mt-2 mb-3 text-sm text-muted">
-                {type.aka ? `${type.aka} · ` : ''}<span className="font-mono">{stepPattern(scales[0])}</span>
+                <span className="font-mono" title="W = whole step, H = half step">{stepPattern(scales[0])}</span>
               </p>
               <ul className="flex flex-wrap gap-1.5">
                 {ROOTS.map((root) => {

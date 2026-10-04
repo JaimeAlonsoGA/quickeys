@@ -66,10 +66,10 @@ const QuickSearch = ({ initialQuery = '', onSelect, onClear, hasSelection }) => 
         aria-expanded={expanded}
         aria-controls={listId}
         aria-autocomplete="list"
-        aria-label="Find a chord, scale or note"
+        aria-label="Search a chord, scale or note"
         autoComplete="off"
         spellCheck={false}
-        placeholder="Find a chord, scale or note…  Am7, F# minor scale, Do mayor"
+        placeholder="Am7, F# minor scale, C4…"
         value={query}
         onChange={(e) => {
           setQuery(e.target.value);

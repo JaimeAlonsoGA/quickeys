@@ -2,7 +2,7 @@
 import { createContext, useCallback, useContext, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
-  LuArrowRight, LuChevronLeft, LuChevronRight, LuKeyboard, LuMinus, LuPlay, LuPlus, LuVolume2, LuVolumeX,
+  LuArrowRight, LuChevronLeft, LuChevronRight, LuKeyboard, LuPlay, LuVolume2, LuVolumeX, LuZoomIn, LuZoomOut,
 } from 'react-icons/lu';
 import { TbPiano } from 'react-icons/tb';
 import { audioEngine } from '../../audio/engine';
@@ -68,7 +68,6 @@ const QuickPiano = () => {
   const isLg = useIsLg();
   const scrollerRef = useRef(null);
   const [sustainKey, setSustainKey] = useState(false);
-  const [visible, setVisible] = useState([0, 0]);
 
   useEffect(() => {
     audioEngine.setVolume(volume);
@@ -95,33 +94,6 @@ const QuickPiano = () => {
     if (!el) return;
     scroller.scrollTo({ left: el.offsetLeft + el.offsetWidth / 2 - scroller.clientWidth / 2, behavior });
   }, []);
-
-  const updateVisible = useCallback(() => {
-    const s = scrollerRef.current;
-    if (!s) return;
-    const width = ZOOM_LEVELS[zoom];
-    const first = Math.floor(s.scrollLeft / width);
-    const last = Math.floor((s.scrollLeft + s.clientWidth) / width);
-    setVisible((prev) => (prev[0] === first && prev[1] === last ? prev : [first, last]));
-  }, [zoom]);
-
-  useEffect(() => {
-    const s = scrollerRef.current;
-    let frame = 0;
-    const schedule = () => {
-      cancelAnimationFrame(frame);
-      frame = requestAnimationFrame(updateVisible);
-    };
-    schedule();
-    s.addEventListener('scroll', schedule, { passive: true });
-    const observer = new ResizeObserver(schedule);
-    observer.observe(s);
-    return () => {
-      cancelAnimationFrame(frame);
-      s.removeEventListener('scroll', schedule);
-      observer.disconnect();
-    };
-  }, [updateVisible]);
 
   const [lo, hi] = rangeOf(baseOctave);
   const keymapCenter = lo + 12;
@@ -200,8 +172,6 @@ const QuickPiano = () => {
         className="mt-3 h-44 rounded-2xl border border-[#d9cdbd] bg-[#2a2520] p-0 shadow-inner sm:mt-4 sm:h-56 lg:h-60"
       />
 
-      <OctaveStrip visible={visible} onJump={centerOn} />
-
       <Toolbar isLg={isLg} lo={lo} hi={hi} />
     </section>
   );
@@ -232,104 +202,65 @@ const Readout = ({ selection, solfege, onReplay }) => {
   const playing = played.length > 0;
 
   let title = null;
-  let subtitle = null;
+  let detail = null; // one short fact: a frequency or the chord quality
   let chips = [];
   let link = null;
 
   if (playing) {
-    chips = played.map((n) => (solfege ? n.solfege : n.english) + n.octave);
     if (played.length === 1) {
       const n = played[0];
       title = (solfege ? n.solfege : n.english) + n.octave;
-      subtitle = `${n.frequency.toFixed(2)} Hz · MIDI ${n.midi}`;
-      chips = [];
+      detail = `${n.frequency.toFixed(2)} Hz`;
     } else {
       const found = identify(played.map((n) => n.midi));
+      chips = played.map((n) => (solfege ? n.solfege : n.english));
       if (found?.kind === 'chord') {
         const [{ chord, bass }] = found.chords;
         title = displayName(chord.root.name, solfege) + chord.quality.symbol + (bass ? `/${displayName(bass, solfege)}` : '');
-        subtitle = `${chord.name}${bass ? ` over ${bass}` : ''}${found.chords.length > 1 ? ` · also ${found.chords.slice(1).map((c) => c.chord.symbol + (c.bass ? `/${c.bass}` : '')).join(', ')}` : ''}`;
+        detail = chord.quality.name;
         link = chordPath(chord);
       } else if (found?.kind === 'interval') {
         title = found.name;
-        subtitle = 'interval';
-      } else {
-        title = `${played.length} notes`;
-        subtitle = 'no common chord';
       }
     }
   } else if (selection) {
     title = labelOf(selection, solfege);
-    subtitle = selection.type === 'chord' ? `${selection.name} chord` : selection.type === 'scale' ? `${selection.scaleType.name} scale` : 'note';
+    if (selection.type === 'chord') detail = selection.quality.name;
     chips = selection.notes ? selection.notes.map((n) => displayName(n.name, solfege)) : [];
     link = pathOf(selection);
   }
 
   return (
-    <div className="flex min-h-[4.5rem] flex-1 items-center gap-3 rounded-2xl bg-sunken/70 px-4 py-2" aria-live="polite">
-      {title ? (
-        <>
-          <div className="min-w-0 flex-1">
-            <div className="flex flex-wrap items-baseline gap-x-3">
-              <span className="font-display text-2xl font-bold leading-tight sm:text-3xl">{title}</span>
-              {subtitle && <span className="truncate text-sm text-muted">{subtitle}</span>}
-            </div>
-            {chips.length > 0 && (
-              <div className="mt-1 flex flex-wrap gap-1.5">
-                {chips.map((c, i) => (
-                  <span key={`${c}-${i}`} className="rounded-full bg-surface px-2 py-0.5 text-xs font-semibold text-ink/80">{c}</span>
-                ))}
-              </div>
-            )}
-          </div>
-          {sustain && <span className="rounded-full bg-accent-soft px-2 py-0.5 text-xs font-semibold text-accent">Sustain</span>}
-          {selection && !playing && (
-            <button type="button" onClick={onReplay} className="icon-btn bg-surface text-accent" aria-label="Play again">
-              <LuPlay size={16} />
-            </button>
-          )}
-          {link && (
-            <Link to={link} className="icon-btn hidden bg-surface sm:inline-flex" aria-label="Open the full page" title="Open the full page">
-              <LuArrowRight size={16} />
-            </Link>
-          )}
-        </>
-      ) : (
-        <p className="text-sm text-muted">
-          <span className="font-semibold text-ink">Tap a key</span> or type a chord. Play several notes and the chord is named
-          instantly.
-          {sustain && <span className="ml-2 rounded-full bg-accent-soft px-2 py-0.5 text-xs font-semibold text-accent">Sustain</span>}
-        </p>
+    <div className="flex min-h-12 flex-1 items-center gap-3 rounded-2xl bg-sunken/70 px-4 py-1.5" aria-live="polite">
+      <div className="flex min-w-0 flex-1 flex-wrap items-center gap-x-3 gap-y-1">
+        {title ? (
+          <span className="font-display text-2xl font-bold leading-tight">{title}</span>
+        ) : (
+          !chips.length && <span className="text-xl text-muted/40" aria-hidden>♪</span>
+        )}
+        {detail && <span className="text-sm text-muted">{detail}</span>}
+        {chips.length > 0 && (
+          <span className="flex flex-wrap gap-1.5">
+            {chips.map((c, i) => (
+              <span key={`${c}-${i}`} className="rounded-full bg-surface px-2 py-0.5 text-xs font-semibold text-ink/80">{c}</span>
+            ))}
+          </span>
+        )}
+      </div>
+      {sustain && <span className="rounded-full bg-accent-soft px-2 py-0.5 text-xs font-semibold text-accent">Sustain</span>}
+      {selection && !playing && (
+        <button type="button" onClick={onReplay} className="icon-btn bg-surface text-accent" aria-label="Play" title="Play">
+          <LuPlay size={16} />
+        </button>
+      )}
+      {link && (
+        <Link to={link} className="icon-btn bg-surface" aria-label={`${title}: notes, formula and inversions`} title="Open">
+          <LuArrowRight size={16} />
+        </Link>
       )}
     </div>
   );
 };
-
-// --- Octave strip: jump around the keyboard ---------------------------------
-
-const OCTAVES = [2, 3, 4, 5, 6, 7];
-
-
-const OctaveStrip = ({ visible, onJump }) => (
-  <div className="mt-2 flex items-center gap-1 overflow-x-auto px-1" role="group" aria-label="Jump to octave">
-    {OCTAVES.map((o) => {
-      // White-key index range of this octave: 7 white keys per octave from C2.
-      const start = (o - 2) * 7;
-      const inView = start + 7 > visible[0] && start <= visible[1];
-      return (
-        <button
-          key={o}
-          type="button"
-          onClick={() => onJump((o + 1) * 12 + 5)}
-          aria-label={`Show octave ${o}`}
-          className={`rounded-full px-2.5 py-1 font-mono text-xs transition ${inView ? 'bg-accent-soft text-accent font-semibold' : 'text-muted hover:bg-sunken'}`}
-        >
-          C{o}
-        </button>
-      );
-    })}
-  </div>
-);
 
 // --- Toolbar ----------------------------------------------------------------
 
@@ -341,7 +272,7 @@ const Toolbar = ({ isLg, lo, hi }) => {
   };
 
   return (
-    <div className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-2 border-t border-line pt-3 text-sm">
+    <div className="mt-3 flex flex-wrap items-center gap-2 text-sm">
       <div className="flex rounded-full bg-sunken p-0.5" role="group" aria-label="Note names">
         {[[false, 'C D E'], [true, 'Do Re Mi']].map(([value, label]) => (
           <button
@@ -361,47 +292,41 @@ const Toolbar = ({ isLg, lo, hi }) => {
         aria-pressed={sustainLatch}
         onClick={() => update('sustainLatch', !sustainLatch)}
         className={`icon-btn px-3 text-xs font-semibold ${sustainLatch ? 'bg-accent-soft text-accent hover:bg-accent-soft hover:text-accent' : ''}`}
-        title={isLg ? 'Sustain pedal (or hold Space)' : 'Sustain pedal'}
+        title={isLg ? 'Sustain (hold Space)' : 'Sustain'}
       >
         <TbPiano size={16} /> Sustain
       </button>
 
       {isLg && (
-        <>
+        <div className="flex items-center rounded-full bg-sunken/70 p-0.5" role="group" aria-label="Computer keyboard">
           <button
             type="button"
             aria-pressed={showKeyLabels}
+            aria-label="Show computer keys on the piano"
+            title="Computer keys"
             onClick={() => update('showKeyLabels', !showKeyLabels)}
-            className={`icon-btn px-3 text-xs font-semibold ${showKeyLabels ? 'text-ink' : ''}`}
-            title="Show the computer keys on the piano"
+            className={`icon-btn h-8 ${showKeyLabels ? 'bg-surface text-ink shadow-sm' : ''}`}
           >
-            <LuKeyboard size={16} /> Keys
+            <LuKeyboard size={16} />
           </button>
-          <div className="flex items-center" title="Octaves played by the computer keyboard (← →)">
-            <button type="button" className="icon-btn" aria-label="Lower octave" disabled={baseOctave <= MIN_BASE_OCTAVE} onClick={() => update('baseOctave', baseOctave - 1)}>
-              <LuChevronLeft size={16} />
-            </button>
-            <span className="min-w-[5.5rem] text-center font-mono text-xs text-muted">{name(lo)}–{name(hi)}</span>
-            <button type="button" className="icon-btn" aria-label="Higher octave" disabled={baseOctave >= MAX_BASE_OCTAVE} onClick={() => update('baseOctave', baseOctave + 1)}>
-              <LuChevronRight size={16} />
-            </button>
-          </div>
-        </>
+          <button type="button" className="icon-btn h-8" aria-label="Octave down" title="Octave down (←)" disabled={baseOctave <= MIN_BASE_OCTAVE} onClick={() => update('baseOctave', baseOctave - 1)}>
+            <LuChevronLeft size={16} />
+          </button>
+          <span className="min-w-[4.5rem] text-center font-mono text-xs text-muted">{name(lo)}–{name(hi)}</span>
+          <button type="button" className="icon-btn h-8" aria-label="Octave up" title="Octave up (→)" disabled={baseOctave >= MAX_BASE_OCTAVE} onClick={() => update('baseOctave', baseOctave + 1)}>
+            <LuChevronRight size={16} />
+          </button>
+        </div>
       )}
 
       <div className="ml-auto flex items-center gap-1">
-        <button type="button" className="icon-btn" aria-label="Smaller keys" disabled={zoom <= 0} onClick={() => update('zoom', zoom - 1)}>
-          <LuMinus size={16} />
+        <button type="button" className="icon-btn" aria-label="Smaller keys" title="Smaller keys" disabled={zoom <= 0} onClick={() => update('zoom', zoom - 1)}>
+          <LuZoomOut size={16} />
         </button>
-        <button type="button" className="icon-btn" aria-label="Bigger keys" disabled={zoom >= ZOOM_LEVELS.length - 1} onClick={() => update('zoom', zoom + 1)}>
-          <LuPlus size={16} />
+        <button type="button" className="icon-btn" aria-label="Bigger keys" title="Bigger keys" disabled={zoom >= ZOOM_LEVELS.length - 1} onClick={() => update('zoom', zoom + 1)}>
+          <LuZoomIn size={16} />
         </button>
-        <button
-          type="button"
-          className="icon-btn"
-          aria-label={volume ? 'Mute' : 'Unmute'}
-          onClick={() => update('volume', volume ? 0 : 0.8)}
-        >
+        <button type="button" className="icon-btn" aria-label={volume ? 'Mute' : 'Unmute'} title={volume ? 'Mute' : 'Unmute'} onClick={() => update('volume', volume ? 0 : 0.8)}>
           {volume ? <LuVolume2 size={16} /> : <LuVolumeX size={16} />}
         </button>
         <input
@@ -414,15 +339,6 @@ const Toolbar = ({ isLg, lo, hi }) => {
           className="hidden w-20 accent-[rgb(var(--accent))] sm:block"
         />
       </div>
-
-      {isLg && (
-        <p className="w-full text-xs text-muted">
-          Play with your keyboard: <kbd className="font-mono">Q</kbd>–<kbd className="font-mono">P</kbd> and{' '}
-          <kbd className="font-mono">Z</kbd>–<kbd className="font-mono">.</kbd> · <kbd className="font-mono">Space</kbd> sustain ·{' '}
-          <kbd className="font-mono">←</kbd> <kbd className="font-mono">→</kbd> octave · <kbd className="font-mono">/</kbd> search ·{' '}
-          <kbd className="font-mono">Esc</kbd> clear
-        </p>
-      )}
     </div>
   );
 };

@@ -14,14 +14,14 @@ const renderAt = (path) =>
 describe('App', () => {
   it('plays chords from the computer keyboard and names them', () => {
     const { container } = renderAt('/');
-    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('The quick piano');
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Quickeys');
     expect(container.querySelectorAll('[data-note]')).toHaveLength(72);
 
     act(() => {
       ['KeyQ', 'KeyE', 'KeyT'].forEach((code) => fireEvent.keyDown(window, { code }));
     });
     expect(screen.getByRole('button', { name: 'C4' })).toHaveAttribute('aria-pressed', 'true');
-    expect(screen.getByText('C major', { selector: '[aria-live] span' })).toBeInTheDocument();
+    expect(document.querySelector('[aria-live]')).toHaveTextContent(/^CmajorCEG$/);
 
     act(() => {
       ['KeyQ', 'KeyE', 'KeyT'].forEach((code) => fireEvent.keyUp(window, { code }));
@@ -34,7 +34,7 @@ describe('App', () => {
     const input = screen.getByRole('combobox');
     fireEvent.change(input, { target: { value: 'Am7' } });
     fireEvent.keyDown(input, { key: 'Enter' });
-    expect(screen.getByText('A minor 7th chord')).toBeInTheDocument();
+    expect(document.querySelector('[aria-live]')).toHaveTextContent(/^Am7minor 7thACEG/);
   });
 
   it('renders chord and scale pages', () => {

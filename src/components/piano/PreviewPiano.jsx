@@ -6,7 +6,7 @@ import { midiToId, octaveRangeFor } from './geometry';
 import Keyboard from './Keyboard';
 
 /** A small fitted keyboard with some notes marked, and a button to hear them. */
-const PreviewPiano = ({ midis, names, arpeggio = false, playLabel = 'Play', className = 'h-32 sm:h-40', compact = false }) => {
+const PreviewPiano = ({ midis, names, arpeggio = false, playLabel = 'Play', className = 'h-32 sm:h-40', compact = false, children }) => {
   const { solfege } = useSettings();
   const [from, to] = octaveRangeFor(midis);
   const marked = useMemo(() => new Map(midis.map((m, i) => [m, names?.[i] ?? null])), [midis, names]);
@@ -22,13 +22,16 @@ const PreviewPiano = ({ midis, names, arpeggio = false, playLabel = 'Play', clas
         solfege={solfege}
         className={`rounded-2xl border border-[#d9cdbd] bg-[#2a2520] ${className}`}
       />
+      <div className="mt-3 flex flex-wrap items-center gap-2">
       <button
         type="button"
         onClick={play}
-        className={`mt-3 inline-flex items-center gap-2 rounded-full bg-accent font-semibold text-accent-ink shadow-card transition hover:brightness-105 active:scale-95 ${compact ? 'px-3 py-1.5 text-xs' : 'px-4 py-2 text-sm'}`}
+        className={`inline-flex items-center gap-2 rounded-full bg-accent font-semibold text-accent-ink shadow-card transition hover:brightness-105 active:scale-95 ${compact ? 'px-3 py-1.5 text-xs' : 'px-4 py-2 text-sm'}`}
       >
         <LuPlay size={compact ? 12 : 14} /> {playLabel}
       </button>
+      {children}
+      </div>
     </div>
   );
 };

@@ -1,3 +1,4 @@
+import { TbPiano } from 'react-icons/tb';
 import { Link, useParams } from 'react-router-dom';
 import PreviewPiano from '../components/piano/PreviewPiano';
 import Breadcrumbs from '../components/ui/Breadcrumbs';
@@ -62,11 +63,11 @@ const ScalePage = () => {
 
       <div className="grid gap-6 lg:grid-cols-[1.4fr_1fr]">
         <Section>
-          <PreviewPiano midis={scale.midis} names={[...names, names[0]]} arpeggio playLabel="Play the scale" className="h-36 sm:h-48" />
-          <p className="mt-4 text-sm text-muted">
-            <Link className="font-semibold text-accent" to={`/?q=${encodeURIComponent(scale.name + ' scale')}`}>Open it on the full piano</Link> to
-            play along.
-          </p>
+          <PreviewPiano midis={scale.midis} names={[...names, names[0]]} arpeggio playLabel="Play" className="h-36 sm:h-48">
+            <Link to={`/?q=${encodeURIComponent(scale.name + ' scale')}`} className="chip">
+              <TbPiano size={14} /> Open in piano
+            </Link>
+          </PreviewPiano>
         </Section>
         <Section title="Notes">
           <ul className="grid grid-cols-4 gap-2">
@@ -77,14 +78,12 @@ const ScalePage = () => {
               </li>
             ))}
           </ul>
-          <p className="mt-4 text-sm text-muted">
-            Pattern: <span className="font-mono text-ink">{stepPattern(scale)}</span>
-          </p>
+          <p className="mt-4 font-mono text-sm text-muted" title="W = whole step, H = half step">{stepPattern(scale)}</p>
         </Section>
       </div>
 
       {chords.length > 0 && (
-        <Section title={`Chords in ${scale.name}`} className="mt-6" intro="The triad built on each note of the scale.">
+        <Section title={`Chords in ${scale.name}`} className="mt-6">
           <ul className="grid grid-cols-2 gap-2 sm:grid-cols-4 lg:grid-cols-7">
             {chords.map((c) => (
               <li key={c.numeral}>

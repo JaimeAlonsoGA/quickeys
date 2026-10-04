@@ -19,9 +19,6 @@ const Footer = () => (
           <Logo className="h-6 w-6" />
           <span className="font-display font-bold">Quickeys</span>
         </div>
-        <p className="mt-2 text-sm text-muted">
-          A quick, free online piano to find notes, chords and scales. No sign-up, no download.
-        </p>
       </div>
       <nav aria-label="Footer" className="grid grid-cols-2 gap-x-8 gap-y-1.5 text-sm">
         {LINKS.map(([to, label]) => (

@@ -13,13 +13,7 @@ const ChordsIndex = () => {
 
   return (
     <>
-      <div className="mb-6 max-w-3xl">
-        <h1 className="text-3xl font-bold sm:text-4xl">Piano chords chart</h1>
-        <p className="mt-2 text-muted sm:text-lg">
-          {CHORDS.length} chords: {QUALITIES.length} chord types in all 12 keys. Each one has its notes on an interactive keyboard,
-          its formula and its inversions. Looking for one fast? <Link to="/" className="font-semibold text-accent">Search it on the piano</Link>.
-        </p>
-      </div>
+      <h1 className="mb-6 text-3xl font-bold sm:text-4xl">Piano chords</h1>
       <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {ROOTS.map((root) => (
           <Section key={root.slug} title={`${root.name}${root.alt ? ` / ${root.alt}` : ''} chords`} as="h2" className="!p-5">

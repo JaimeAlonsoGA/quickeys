@@ -71,47 +71,27 @@ const Home = () => {
 
   return (
     <SelectionProvider>
-      <div className="mb-5 max-w-3xl">
-        <h1 className="text-3xl font-bold leading-tight sm:text-4xl">
-          The quick piano<span className="text-accent">.</span>
-        </h1>
-        <p className="mt-1 text-muted sm:text-lg">Play a note, find any chord or scale, hear it instantly. Free, nothing to install.</p>
-      </div>
+      {/* The piano speaks for itself; the heading is for search engines and screen readers. */}
+      <h1 className="sr-only">Quickeys: online piano to find any note, chord or scale</h1>
 
       <QuickPiano />
 
-      <div className="mt-8 grid gap-6 lg:grid-cols-2">
+      <div className="mt-6 grid gap-6 lg:grid-cols-2">
         <Section
-          title="Popular chords"
-          intro="Tap to see and hear them on the piano."
-          action={<Link to="/chords" className="text-sm font-semibold text-accent">All {CHORDS.length} chords →</Link>}
+          title="Chords"
+          action={<Link to="/chords" className="text-sm font-semibold text-accent">All {CHORDS.length} →</Link>}
         >
           <Chips items={POPULAR_CHORDS} label={(c) => c.symbol} title={(c) => `${c.name} chord`} />
         </Section>
         <Section
           title="Scales"
-          intro="Major, minor, pentatonic, blues and the modes, in every key."
-          action={<Link to="/scales" className="text-sm font-semibold text-accent">All {SCALES.length} scales →</Link>}
+          action={<Link to="/scales" className="text-sm font-semibold text-accent">All {SCALES.length} →</Link>}
         >
           <Chips items={POPULAR_SCALES} label={(s) => s.name} title={(s) => `${s.name} scale`} />
         </Section>
       </div>
 
-      <div className="mt-6 grid gap-6 md:grid-cols-3">
-        {[
-          ['Play', 'Tap the keys or use your computer keyboard. Hold Space for sustain, arrows to change octave.'],
-          ['Find', 'Type “Am7”, “Eb major scale” or “Sol”. The keys light up and you hear it.'],
-          ['Learn', 'Play a few notes and the chord is named for you, inversions included.'],
-        ].map(([title, text], i) => (
-          <div key={title} className="card p-5">
-            <span className="font-mono text-xs font-semibold text-accent">0{i + 1}</span>
-            <h2 className="mt-1 text-lg font-bold">{title}</h2>
-            <p className="mt-1 text-sm text-muted">{text}</p>
-          </div>
-        ))}
-      </div>
-
-      <Section title="Questions" className="mt-6">
+      <Section title="FAQ" className="mt-6">
         <Faq items={HOME_FAQ} />
       </Section>
     </SelectionProvider>

@@ -1,3 +1,4 @@
+import Faq from '../components/ui/Faq';
 import Section from '../components/ui/Section';
 import { notes } from '../music/notes';
 import { breadcrumbs, faq, useHead } from '../seo/head';
@@ -20,13 +21,7 @@ const FrequencyChart = () => {
   const octaves = [2, 3, 4, 5, 6, 7];
   return (
     <>
-      <div className="mb-6 max-w-3xl">
-        <h1 className="text-3xl font-bold sm:text-4xl">Note frequency chart</h1>
-        <p className="mt-2 text-muted sm:text-lg">
-          The pitch of every note in hertz, tuned to A4 = 440 Hz (equal temperament). Each octave doubles the frequency.
-          Click a note to hear it.
-        </p>
-      </div>
+      <h1 className="mb-6 text-3xl font-bold sm:text-4xl">Note frequencies</h1>
       <Section>
         <div className="-mx-2 overflow-x-auto px-2">
           <table className="w-full min-w-[40rem] border-separate border-spacing-0 text-sm">
@@ -65,30 +60,11 @@ const FrequencyChart = () => {
           </table>
         </div>
       </Section>
-      <Section title="About note frequencies" className="mt-6">
-        <div className="prose-cozy max-w-3xl">
-          <p>
-            The frequency of a note is the number of vibrations per second of its sound wave. The higher the frequency, the
-            higher the pitch. Middle C (C4) is 261.63 Hz and the A above it (A4) is the 440 Hz tuning reference.
-          </p>
-        </div>
-        <div className="mt-4">
-          <FaqList />
-        </div>
+      <Section title="FAQ" className="mt-6">
+        <Faq items={QA} />
       </Section>
     </>
   );
 };
-
-const FaqList = () => (
-  <dl className="grid gap-4 md:grid-cols-3">
-    {QA.map(([q, a]) => (
-      <div key={q} className="rounded-2xl bg-sunken p-4">
-        <dt className="font-semibold">{q}</dt>
-        <dd className="mt-1 text-sm text-ink/80">{a}</dd>
-      </div>
-    ))}
-  </dl>
-);
 
 export default FrequencyChart;

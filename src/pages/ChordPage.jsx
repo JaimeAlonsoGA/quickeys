@@ -1,3 +1,4 @@
+import { TbPiano } from 'react-icons/tb';
 import { Link, useParams } from 'react-router-dom';
 import PreviewPiano from '../components/piano/PreviewPiano';
 import Breadcrumbs from '../components/ui/Breadcrumbs';
@@ -67,10 +68,11 @@ const ChordPage = () => {
 
       <div className="grid gap-6 lg:grid-cols-[1.4fr_1fr]">
         <Section>
-          <PreviewPiano midis={chord.midis} names={names} playLabel={`Play ${chord.symbol}`} className="h-36 sm:h-48" />
-          <p className="mt-4 text-sm text-muted">
-            Want it in context? <Link className="font-semibold text-accent" to={`/?q=${encodeURIComponent(chord.symbol)}`}>Open {chord.symbol} on the full piano</Link>.
-          </p>
+          <PreviewPiano midis={chord.midis} names={names} playLabel={`Play ${chord.symbol}`} className="h-36 sm:h-48">
+            <Link to={`/?q=${encodeURIComponent(chord.symbol)}`} className="chip">
+              <TbPiano size={14} /> Open in piano
+            </Link>
+          </PreviewPiano>
         </Section>
         <Section title="Notes">
           <ul className="grid grid-cols-3 gap-2 sm:grid-cols-4 lg:grid-cols-3">
@@ -81,13 +83,10 @@ const ChordPage = () => {
               </li>
             ))}
           </ul>
-          <p className="mt-4 text-sm text-muted">
-            Formula: <span className="font-mono text-ink">{chord.notes.map((n) => n.interval).join(' – ')}</span>
-          </p>
         </Section>
       </div>
 
-      <Section title={`${chord.symbol} inversions`} className="mt-6" intro="The same notes, with a different note in the bass.">
+      <Section title={`${chord.symbol} inversions`} className="mt-6">
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
           {inversions(chord).map((inv) => (
             <div key={inv.label}>
